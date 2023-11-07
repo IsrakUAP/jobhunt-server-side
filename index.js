@@ -44,6 +44,13 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/category/:id', async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await jobCollection.findOne(query);
+      res.send(result);
+    })
+
     app.delete('/category/:id',async(req,res) =>{
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
