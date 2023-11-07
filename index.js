@@ -29,6 +29,7 @@ async function run() {
 
 
     const jobCollection = client.db('jobList').collection('category');
+    const bidCollection = client.db('jobList').collection('bidList')
 
     app.get('/category', async (req, res) => {
       const cursor = jobCollection.find();
@@ -40,12 +41,17 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
       const options = {
-        projection: { minPrice: 1, maxPrice: 1, deadline: 1 },
+        projection: { minPrice: 1, maxPrice: 1, deadline: 1,title: 1,shortDescription: 1 },
       };
       const result = await jobCollection.findOne(query,options);
       res.send(result);
     })
 
+    app.post('/bidList',async(req,res)=>{
+      const newBid= req.body;
+      const result = await bidCollection.insertOne(newBid);
+      res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
