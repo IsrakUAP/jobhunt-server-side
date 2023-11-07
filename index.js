@@ -32,8 +32,8 @@ async function run() {
     const bidCollection = client.db('jobList').collection('bidList')
 
 
-    app.post('/category',async(req,res)=>{
-      const newJob= req.body;
+    app.post('/category', async (req, res) => {
+      const newJob = req.body;
       const result = await jobCollection.insertOne(newJob);
       res.send(result);
     })
@@ -44,32 +44,52 @@ async function run() {
       res.send(result);
     })
 
-    app.get('/category/:id', async(req,res)=>{
+    app.get('/category/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const query = { _id: new ObjectId(id) }
       const result = await jobCollection.findOne(query);
       res.send(result);
     })
 
-    app.delete('/category/:id',async(req,res) =>{
+    app.put('/category/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const filter = { _id: new ObjectId(id) }
+      const options = { upsert: true };
+      const updateJob = req.body;
+      const job = {
+        $set: {
+          email: updateJob.email,
+          title: updateJob.title,
+          deadline: updateJob.deadline,
+          shortDescription: updateJob.shortDescription,
+          category: updateJob.category,
+          minPrice: updateJob.minPrice,
+          maxPrice: updateJob.maxPrice
+        }
+      }
+      const result = await jobCollection.updateOne(filter,job,options);
+      res.send(result);
+    })
+
+    app.delete('/category/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
       const result = await jobCollection.deleteOne(query);
       res.send(result);
     })
 
-    app.get('/category/:id', async(req, res) => {
+    app.get('/category/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
       const options = {
-        projection: { minPrice: 1, maxPrice: 1, deadline: 1,title: 1,shortDescription: 1, email: 1 },
+        projection: { minPrice: 1, maxPrice: 1, deadline: 1, title: 1, shortDescription: 1, email: 1 },
       };
-      const result = await jobCollection.findOne(query,options);
+      const result = await jobCollection.findOne(query, options);
       res.send(result);
     })
 
-    app.post('/bidList',async(req,res)=>{
-      const newBid= req.body;
+    app.post('/bidList', async (req, res) => {
+      const newBid = req.body;
       const result = await bidCollection.insertOne(newBid);
       res.send(result);
     })
@@ -79,7 +99,7 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
-    
+
 
 
     // Send a ping to confirm a successful connection
