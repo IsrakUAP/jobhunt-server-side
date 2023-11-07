@@ -44,11 +44,18 @@ async function run() {
       res.send(result);
     })
 
+    app.delete('/category/:id',async(req,res) =>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await jobCollection.deleteOne(query);
+      res.send(result);
+    })
+
     app.get('/category/:id', async(req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
       const options = {
-        projection: { minPrice: 1, maxPrice: 1, deadline: 1,title: 1,shortDescription: 1 },
+        projection: { minPrice: 1, maxPrice: 1, deadline: 1,title: 1,shortDescription: 1, email: 1 },
       };
       const result = await jobCollection.findOne(query,options);
       res.send(result);
