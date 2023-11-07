@@ -31,6 +31,13 @@ async function run() {
     const jobCollection = client.db('jobList').collection('category');
     const bidCollection = client.db('jobList').collection('bidList')
 
+
+    app.post('/category',async(req,res)=>{
+      const newJob= req.body;
+      const result = await jobCollection.insertOne(newJob);
+      res.send(result);
+    })
+
     app.get('/category', async (req, res) => {
       const cursor = jobCollection.find();
       const result = await cursor.toArray();
